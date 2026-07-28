@@ -221,8 +221,8 @@ Mode	Normal
 👥 Team
 Product Owner :	Nipuni
 Project Manager	: Mufazzeer 
-App Developers	: Rikas, Dilukji,
-Data Scientists	: Kaveeshan
+App Developers	: Rikas, Dilukji, Sajitha
+Data Scientists	: Kaveeshan, Pathum, Sanjeewa
 
 
 📅 Timeline
@@ -243,48 +243,28 @@ Open-source community (Ultralytics YOLO, Flask, OpenCV)
 
 🔗 Quick Links
 Link	                URL
-GitHub Repository	https://github.com/yourusername/smart-classroom-edge-ai
-Python 3.11 Download	https://www.python.org/ftp/python/3.11.9/python-3.11.9-amd64.exe
+GitHub Repository	https://github.com/Mufa32342/Smart-Classroom-Edge-AI-System
 Docker Download	https://www.docker.com/products/docker-desktop
-Ultralytics YOLO	https://github.com/ultralytics/ultralytics
-
 
 🎯 Project Demo Script
 What to Show
 Start System (10 seconds)
-
 Show terminal output
-
 Explain system starting
-
 Dashboard (30 seconds)
-
 Show video feed
-
 Explain each component
-
 Show real-time updates
-
 Occupancy Changes (30 seconds)
-
 Show different occupancy levels
-
 Show AC adjusting automatically
-
 Explain threshold logic
-
 Manual Controls (20 seconds)
-
 Adjust temperature
-
 Change fan speed
-
 Update thresholds
-
 System Logs (10 seconds)
-
 Show log entries
-
 Explain monitoring
 
 ✅ Checklist for Demo
@@ -297,6 +277,7 @@ Explain monitoring
 □ Logs showing activity
 □ Manual controls working
 □ Thresholds configurable
+
 🔧 Customization
 Adding Custom Model
 bash
