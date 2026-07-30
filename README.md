@@ -15,7 +15,7 @@
 ### 🎯 What It Does
 
 1. **Detects** people in classroom video using YOLOv8
-2. **Classifies** occupancy as LOW (0-2), MEDIUM (4-9), or HIGH (10+)
+2. **Classifies** occupancy as LOW (0-2), MEDIUM (3-9), or HIGH (10+)
 3. **Controls** simulated AC system based on occupancy level
 4. **Displays** live dashboard with video feed, occupancy status, and AC controls
 
