@@ -115,8 +115,6 @@ Designed and built as part of the **Edge Computing** module at the **University 
 
 ## 🛠️ Prerequisites
 
-Before you begin, ensure you have the following:
-
 | Requirement | Version | Purpose |
 |---|---|---|
 | 🐍 Python | 3.10+ | Backend runtime |
