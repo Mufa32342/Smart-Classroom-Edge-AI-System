@@ -1,6 +1,6 @@
 # 🏫 Smart Classroom Edge AI System
 
-Made with ❤️ by **Group 03** · University of Jaffna · 2026
+Made with ❤️ by **Group 02** · University of Jaffna · 2026
 Our Group:
 1. Prodect Owner:-
       🧑‍🎓 G.A.K. Nipuni Dilhara Jayasooriya(https://github.com/dilhara918)
