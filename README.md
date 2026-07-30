@@ -1,8 +1,8 @@
 # 🏫 Smart Classroom Edge AI System
 
 Made with ❤️ by **Group 02** · University of Jaffna · 2026
-Our Group:
-1. Prodect Owner:-
+## 👥 Team
+1. Product Owner:-
       🧑‍🎓 G.A.K. Nipuni Dilhara Jayasooriya(https://github.com/dilhara918)
 
 2. Scrum Master:- 
@@ -18,6 +18,12 @@ Our Group:
       🧑‍🎓 Thyaparan Kavishan(https://github.com/kavishan2022)
       🧑‍🎓 S.G.S.I. Abeyarathne(https://github.com/SanjeewaIA)
 
+🏛️ **Institution**:- University of Jaffna
+📚 **Module**:- Edge Computing
+👨‍👩‍👦‍👦 **Group**:- Group 02
+🎓 **Batch**:- Class of 2026
+
+
 ## 📖 Resources
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 [![YOLOv8](https://img.shields.io/badge/YOLOv8-Ultralytics-FF6B35?style=for-the-badge&logo=yolo&logoColor=white)](https://ultralytics.com)
@@ -29,7 +35,6 @@ Our Group:
 **YOLOv8-powered real-time classroom occupancy detection with automated AC climate control simulation.**
 
 ---
-
 
 ## 📋 Table of Contents
 
@@ -58,7 +63,6 @@ Designed and built as part of the **Edge Computing** module at the **University 
 
 ## 🏗️ System Architecture
 
-```
 ┌─────────────────────────────────────────────────────────────────┐
 │                        INPUT SOURCES                            │
 │         📷 Webcam / 🖼️ Image Upload / 🎞️ Video Upload          │
@@ -92,7 +96,6 @@ Designed and built as part of the **Edge Computing** module at the **University 
 │   🖥️  index.html       — Video/Image Detection Dashboard        │
 │   ❄️  ac_dashboard.html — Smart AC Control Dashboard            │
 └─────────────────────────────────────────────────────────────────┘
-```
 
 ---
 
@@ -345,7 +348,6 @@ The system automatically determines the AC state based on the **total number of 
 
 ## 📁 Project Structure
 
-```
 classroom-detector/
 │
 ├── 📓 classroom_yolo_train.ipynb     # Google Colab training notebook
@@ -362,23 +364,6 @@ classroom-detector/
 └── 🌐 dashboard/
     ├── ac_dashboard.html             # Smart Classroom AC Control Dashboard
     └── index.html                    # Video / Image Detection Dashboard
-```
-
----
-
-## 👥 Team
-
-<div align="center">
-
-| | |
-|---|---|
-| 🏛️ **Institution** | University of Jaffna |
-| 📚 **Module** | Edge Computing |
-| 👨‍👩‍👦‍👦 **Group** | Group 03 |
-| 🎓 **Batch** | Class of 2026 |
-
-</div>
-
 ---
 
 ## 📄 License
