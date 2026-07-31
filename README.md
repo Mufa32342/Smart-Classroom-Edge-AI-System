@@ -345,7 +345,7 @@ The system automatically determines the AC state based on the **total number of 
 ---
 
 ## 📁 Project Structure
-
+```
 classroom-detector/
 │
 ├── 📓 classroom_yolo_train.ipynb     # Google Colab training notebook
@@ -363,7 +363,7 @@ classroom-detector/
     ├── ac_dashboard.html             # Smart Classroom AC Control Dashboard
     └── index.html                    # Video / Image Detection Dashboard
 ---
-
+```
 ## 📄 License
 
 This project is licensed under the **MIT License**.
