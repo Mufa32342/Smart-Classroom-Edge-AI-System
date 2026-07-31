@@ -6,13 +6,13 @@ Made with ❤️ by **Group 02** · University of Jaffna · 2026
 1. **Product Owner:** G.A.K.Nipuni Dilhara Jayasooriya
 2. **Project Manager:** M.M.M.Mufazeer
 3. **App Developers:**
-                    *M.N.M.Rikas   
-                   *Dilukji Vimalanathan   
-                   *D.S.N.Ananda
+                   M.N.M.Rikas   
+                   Dilukji Vimalanathan   
+                   D.S.N.Ananda
 5. **Data Scientists:**
-                    * R.P.S.Kulathunga      
-                   * S.G.S.I.Abeyrathne   
-                   * Thyaparan Kavishan
+                     R.P.S.Kulathunga      
+                     S.G.S.I.Abeyrathne   
+                     Thyaparan Kavishan
 
  🏛️ **Institution** : University of Jaffna |
  📚 **Module** : Edge Computing |
