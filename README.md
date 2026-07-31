@@ -328,10 +328,14 @@ The system automatically determines the AC state based on the **total number of 
 ## 📁 Project Structure
 
 ```
-classroom-detector/
+classroom-detector/                   # App Developers Branch
 │
-├── 📓 classroom_yolo_train.ipynb     # Google Colab training notebook
 ├── 📄 README.md                      # Project documentation (this file)
+├── 🐳 Dockerfile                     # Docker image build config
+├── 🐳 docker-compose.yml             # Docker Compose setup
+├── 🔒 .dockerignore                  # Docker ignore rules
+├── ▶️  start.bat                      # Windows startup script
+├── ▶️  start.sh                       # Linux/macOS startup script
 │
 ├── 🖥️ backend/
 │   ├── main.py                       # FastAPI server (runs on port 8000)
@@ -339,12 +343,13 @@ classroom-detector/
 │   ├── requirements.txt              # Python dependencies
 │   └── models/
 │       ├── best.pt                   # Trained YOLOv8 weights (PyTorch)
-│       └── best.onnx                 # Exported ONNX model (edge-optimized)
+│       └── README.md                 # ⚠️ best.onnx excluded (>25 MB — see note inside)
 │
 └── 🌐 dashboard/
-    ├── ac_dashboard.html             # Smart Classroom AC Control Dashboard
-    └── index.html                    # Video / Image Detection Dashboard
+    └── ac_dashboard.html             # Smart Classroom AC Control Dashboard
 ```
+
+> **ℹ️ Note:** `classroom_yolo_train.ipynb` and `best.onnx` are maintained in the **Data Scientists** branch. `index.html` (Video/Image Detection Dashboard) is under development.
 
 ---
 
