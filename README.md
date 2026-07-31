@@ -346,7 +346,7 @@ The system automatically determines the AC state based on the **total number of 
 
 ## 📁 Project Structure
 ```
-classroom-detector/
+Smart Classroom Edge AI System/
 │
 ├── 📓 classroom_yolo_train.ipynb     # Google Colab training notebook
 ├── 📄 README.md                      # Project documentation (this file)
