@@ -25,8 +25,6 @@ Made with ❤️ by **Group 02** · University of Jaffna · 2026
 
 **YOLOv8-powered real-time classroom occupancy detection with automated AC climate control simulation.**
 
-*Edge Computing — University of Jaffna · Group 02 · Class of 2026*
-
 ---
 
 ## 📋 Table of Contents
