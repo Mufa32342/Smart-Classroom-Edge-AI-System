@@ -13,9 +13,9 @@ Made with ❤️ by **Group 02** · University of Jaffna · 2026
       🧑‍🎓 Dilukji Vimalanathan(https://github.com/Dilukji)
       🧑‍🎓 D.S.N. Ananda(https://github.com/Nethmin2002)
 
-4.Data Scientists:-
+4. Data Scientists:-
       🧑‍🎓 R.P.S. Kulathunga(https://github.com/pathum-ts)
-      🧑‍🎓 Thyaparan Kavishan(https://github.com/kavishan2022)
+      🧑‍🎓 Thyaparan Kavishan (https://github.com/kavishan2022) 
       🧑‍🎓 S.G.S.I. Abeyarathne(https://github.com/SanjeewaIA)
 
 🏛️ **Institution**:- University of Jaffna
