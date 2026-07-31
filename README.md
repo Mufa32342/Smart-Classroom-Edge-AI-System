@@ -132,8 +132,8 @@ Designed and built as part of the **Edge Computing** module at the **University 
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/classroom-detector.git
-cd classroom-detector
+git clone https://github.com/Mufa32342/Smart-Classroom-Edge-AI-System.git
+cd Smart-Classroom-Edge-AI-System
 ```
 
 ### 2. Install Backend Dependencies
