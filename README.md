@@ -3,23 +3,21 @@
 Made with ❤️ by **Group 02** · University of Jaffna · 2026
 
 ## 👥 Team
-1. Product Owner: G.A.K.Nipuni Dilhara Jayasooriya
-2. Project Manager: M.M.M.Mufazeer
-3. App Developers:    M.N.M.Rikas   
-                   Dilukji Vimalanathan   
-                   D.S.N.Ananda
-4. Data Scientists:    R.P.S.Kulathunga      
-                    S.G.S.I.Abeyrathne   
-                    Thyaparan Kavishan
+1. **Product Owner:** G.A.K.Nipuni Dilhara Jayasooriya
+2. **Project Manager:** M.M.M.Mufazeer
+3. **App Developers:**
+                    *M.N.M.Rikas   
+                   *Dilukji Vimalanathan   
+                   *D.S.N.Ananda
+5. **Data Scientists:**
+                    * R.P.S.Kulathunga      
+                   * S.G.S.I.Abeyrathne   
+                   * Thyaparan Kavishan
 
-
-
-
-
-| 🏛️ **Institution** : University of Jaffna |
-| 📚 **Module** : Edge Computing |
-| 👨‍👩‍👦‍👦 **Group** : Group 02 |
-| 🎓 **Batch** : Class of 2026 |
+ 🏛️ **Institution** : University of Jaffna |
+ 📚 **Module** : Edge Computing |
+ 👨‍👩‍👦‍👦 **Group** : Group 02 |
+ 🎓 **Batch** : Class of 2026 |
 
 
 
@@ -123,6 +121,7 @@ Before you begin, ensure you have the following:
 |---|---|---|
 | 🐍 Python | 3.10+ | Backend runtime |
 | 📦 pip | Latest | Package management |
+| 🐳 Docker Desktop | Latest | Containerized deployment |
 | 🌐 Google Colab | Free account | Model training |
 | 🤖 Trained Model | `best.pt` + `best.onnx` | YOLOv8 inference |
 | 🖥️ Modern Browser | Chrome / Firefox / Edge | Dashboard access |
