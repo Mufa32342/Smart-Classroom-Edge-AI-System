@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Smart Classroom Edge AI System</title>
+  <meta name="description" content="Edge AI Occupancy Monitoring & Automated HVAC Control System"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#0b1629;--bg2:#0f1e35;--card:#111f38;--card2:#162440;
+      --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+      --cyan:#00d4ff;--cyan2:#0ea5e9;--green:#22c55e;--red:#ef4444;
+      --amber:#f59e0b;--purple:#8b5cf6;--text1:#e2e8f0;--text2:#94a3b8;--text3:#475569;
+      --radius:12px;
+    }
+    html,body{height:100%;overflow:hidden}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text1);display:flex;flex-direction:column;}
+
+    /* ── Header ── */
+    header{background:var(--bg2);border-bottom:1px solid var(--border2);padding:10px 20px;display:flex;align-items:center;gap:12px;flex-shrink:0;}
+    .hdr-logo{width:30px;height:30px;background:linear-gradient(135deg,var(--cyan2),var(--purple));border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.9rem;}
+    .hdr-title h1{font-size:.92rem;font-weight:700;line-height:1.2;}
+    .hdr-title p{font-size:.65rem;color:var(--text2);}
+    .hdr-file{margin-left:auto;display:flex;align-items:center;gap:7px;background:var(--card);border:1px solid var(--border2);border-radius:7px;padding:5px 11px;font-size:.7rem;color:var(--text2);cursor:pointer;transition:all .2s;}
+    .hdr-file:hover{border-color:var(--cyan2);color:var(--text1);}
+    #hdrFileName{max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .api-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 7px var(--green);animation:pulse 2s infinite;}
+    .api-dot.off{background:var(--red);box-shadow:0 0 7px var(--red);animation:none;}
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.3)}}
+
+    /* ── Body Layout ── */
+    .body{flex:1;overflow:hidden;display:grid;grid-template-columns:1fr 320px;grid-template-rows:1fr 130px;gap:0;padding:12px;column-gap:12px;row-gap:10px;}
+
+    /* ── Video Panel ── */
+    .video-panel{background:var(--card);border:1px solid var(--border2);border-radius:var(--radius);display:flex;flex-direction:column;overflow:hidden;grid-row:1;grid-column:1;}
+    .video-header{padding:8px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;flex-shrink:0;}
+    .video-header h2{font-size:.78rem;font-weight:600;display:flex;align-items:center;gap:5px;}
+    .live-badge{margin-left:auto;display:flex;align-items:center;gap:4px;font-size:.65rem;font-weight:600;color:var(--green);background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);padding:2px 7px;border-radius:20px;}
+    .live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 5px var(--green);animation:pulse 1.5s infinite;}
+
+    .video-wrap{flex:1;position:relative;background:#000;overflow:hidden;}
+    canvas#displayCanvas{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;}
+    video#videoEl{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;pointer-events:none;}
+
+    .occupancy-badge{position:absolute;top:10px;left:10px;padding:3px 10px;border-radius:20px;font-size:.72rem;font-weight:700;letter-spacing:.05em;border:1px solid;backdrop-filter:blur(8px);transition:all .4s ease;}
+    .occupancy-badge.LOW{background:rgba(34,197,94,.15);color:var(--green);border-color:rgba(34,197,94,.4);}
+    .occupancy-badge.MEDIUM{background:rgba(245,158,11,.15);color:var(--amber);border-color:rgba(245,158,11,.4);}
+    .occupancy-badge.HIGH{background:rgba(239,68,68,.15);color:var(--red);border-color:rgba(239,68,68,.4);}
+    .person-count{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);border:1px solid var(--border2);padding:3px 9px;border-radius:20px;font-size:.68rem;color:var(--cyan);font-family:'JetBrains Mono',monospace;transition:all .3s;}
+    .fps-badge{position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,.6);border:1px solid var(--border);padding:2px 7px;border-radius:10px;font-size:.62rem;color:var(--text3);font-family:'JetBrains Mono',monospace;}
+
+    .video-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--text3);}
+    .video-placeholder .ph-icon{font-size:2rem;opacity:.5;}
+    .video-placeholder p{font-size:.78rem;}
+
+    .video-controls{padding:8px 14px;border-top:1px solid var(--border);display:flex;align-items:center;gap:7px;flex-shrink:0;background:var(--bg2);}
+    .ctrl-btn{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:6px;border:none;cursor:pointer;font-size:.72rem;font-weight:600;font-family:'Inter',sans-serif;transition:all .2s;}
+    .ctrl-btn.play{background:rgba(34,197,94,.15);color:var(--green);border:1px solid rgba(34,197,94,.3);}
+    .ctrl-btn.play:hover{background:rgba(34,197,94,.25);}
+    .ctrl-btn.pause{background:rgba(245,158,11,.15);color:var(--amber);border:1px solid rgba(245,158,11,.3);}
+    .ctrl-btn.stop{background:rgba(239,68,68,.12);color:var(--red);border:1px solid rgba(239,68,68,.25);}
+    .ctrl-btn:disabled{opacity:.4;cursor:not-allowed;}
+    .ctrl-spacer{flex:1;}
+    .frame-info{font-size:.65rem;color:var(--text2);font-family:'JetBrains Mono',monospace;}
+    .ac-status-bar{display:flex;align-items:center;gap:4px;font-size:.68rem;font-weight:600;}
+    .ac-status-bar.on{color:var(--cyan);}
+    .ac-status-bar.off{color:var(--text3);}
+
+    /* Progress Bar under video */
+    .video-progress{height:3px;background:var(--border);position:relative;flex-shrink:0;}
+    .video-progress-fill{height:100%;background:linear-gradient(90deg,var(--cyan2),var(--cyan));width:0%;transition:width .1s linear;}
+
+    /* ── Right Column ── */
+    .right-col{grid-row:1/3;grid-column:2;display:flex;flex-direction:column;gap:10px;overflow-y:auto;}
+    .right-col::-webkit-scrollbar{width:3px;}
+    .right-col::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px;}
+
+    .card{background:var(--card);border:1px solid var(--border2);border-radius:var(--radius);padding:12px 14px;}
+    .card-hdr{font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px;margin-bottom:10px;}
+
+    /* Metrics */
+    .metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+    .metric{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;}
+    .metric-label{font-size:.58rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:3px;}
+    .metric-value{font-size:1rem;font-weight:800;line-height:1;font-family:'JetBrains Mono',monospace;transition:color .4s;}
+    .metric-value.low{color:var(--green);}
+    .metric-value.medium{color:var(--amber);}
+    .metric-value.high{color:var(--red);}
+    .metric-value.ac-on{color:var(--cyan);}
+    .metric-value.ac-off{color:var(--red);}
+    .metric-value.temp{color:var(--cyan);}
+
+    /* AC run time */
+    .run-row{display:flex;align-items:center;gap:7px;margin-top:8px;}
+    .run-bar-bg{flex:1;height:4px;background:var(--border);border-radius:4px;overflow:hidden;}
+    .run-bar-fill{height:100%;background:linear-gradient(90deg,var(--cyan2),var(--cyan));width:0%;transition:width .5s;}
+
+    /* Mode buttons */
+    .mode-row{display:flex;gap:5px;margin-bottom:8px;}
+    .mode-btn{flex:1;padding:6px 8px;border-radius:7px;border:1px solid;cursor:pointer;font-size:.7rem;font-weight:600;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:4px;transition:all .2s;}
+    .mode-btn.auto{background:rgba(34,197,94,.12);color:var(--green);border-color:rgba(34,197,94,.35);}
+    .mode-btn.auto.active{background:rgba(34,197,94,.28);box-shadow:0 0 10px rgba(34,197,94,.25);}
+    .mode-btn.manual{background:rgba(245,158,11,.08);color:var(--amber);border-color:rgba(245,158,11,.25);}
+    .mode-btn.manual.active{background:rgba(245,158,11,.22);box-shadow:0 0 10px rgba(245,158,11,.2);}
+
+    .auto-msg{display:flex;align-items:center;gap:5px;padding:5px 9px;border-radius:7px;font-size:.66rem;margin-bottom:8px;transition:all .3s;}
+    .auto-msg.auto{background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);color:var(--green);}
+    .auto-msg.manual{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);color:var(--amber);}
+
+    /* AC Display */
+    .ac-display{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;}
+    .ac-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+    .ac-temp-big{font-size:2.2rem;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--cyan);line-height:1;transition:all .4s;}
+    .ac-temp-big.off{color:var(--text3);}
+    .ac-pills{display:flex;flex-direction:column;align-items:flex-end;gap:4px;}
+    .ac-pill{padding:2px 8px;border-radius:20px;font-size:.62rem;font-weight:700;border:1px solid;}
+    .ac-pill.eco{background:rgba(34,197,94,.1);color:var(--green);border-color:rgba(34,197,94,.3);}
+    .ac-pill.ac-on{background:rgba(0,212,255,.1);color:var(--cyan);border-color:rgba(0,212,255,.3);}
+    .ac-pill.ac-off{background:rgba(239,68,68,.1);color:var(--red);border-color:rgba(239,68,68,.3);}
+    .fan-label{font-size:.62rem;color:var(--text2);margin-bottom:2px;}
+    .temp-bar{height:3px;background:var(--border);border-radius:4px;overflow:hidden;margin-top:6px;}
+    .temp-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--cyan2),var(--cyan));transition:width .6s ease;}
+    .target-temp{font-size:.65rem;color:var(--text2);margin-top:4px;}
+
+    /* Manual */
+    .manual-controls{display:none;margin-top:8px;}
+    .manual-controls.show{display:block;}
+    .manual-row{display:flex;align-items:center;gap:6px;margin-bottom:6px;}
+    .manual-label{font-size:.68rem;color:var(--text2);width:85px;flex-shrink:0;}
+    .manual-btns{display:flex;gap:4px;flex-wrap:wrap;}
+    .m-btn{padding:3px 8px;border-radius:5px;border:1px solid var(--border2);background:var(--bg2);color:var(--text2);cursor:pointer;font-size:.68rem;font-family:'Inter',sans-serif;transition:all .15s;}
+    .m-btn:hover,.m-btn.sel{background:var(--card2);color:var(--text1);border-color:var(--cyan2);}
+
+    /* Thresholds */
+    .threshold-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+    .thresh-item{background:var(--card2);border:1px solid var(--border);border-radius:7px;padding:7px 9px;}
+    .thresh-label{font-size:.58rem;color:var(--text3);margin-bottom:3px;}
+    .thresh-row{display:flex;align-items:center;gap:3px;}
+    .thresh-input{width:42px;padding:2px 5px;background:var(--bg);border:1px solid var(--border2);border-radius:4px;color:var(--text1);font-family:'JetBrains Mono',monospace;font-size:.72rem;outline:none;text-align:center;}
+    .thresh-input:focus{border-color:var(--cyan2);}
+    .thresh-unit{font-size:.6rem;color:var(--text3);}
+    .thresh-summary{margin-top:6px;font-size:.62rem;color:var(--text3);line-height:1.6;}
+
+    /* ── Bottom Panel ── */
+    .bottom-panel{grid-column:1;grid-row:2;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    #timelineCanvas{width:100%;height:72px;display:block;border-radius:7px;}
+    .ac-log{max-height:72px;overflow-y:auto;}
+    .ac-log::-webkit-scrollbar{width:3px;}
+    .ac-log::-webkit-scrollbar-thumb{background:var(--border2);}
+    .log-entry{display:flex;gap:6px;align-items:baseline;padding:2px 0;border-bottom:1px solid var(--border);font-size:.64rem;}
+    .log-time{color:var(--text3);font-family:'JetBrains Mono',monospace;flex-shrink:0;width:54px;}
+    .log-msg{color:var(--text2);}
+    .log-msg .on{color:var(--cyan);}
+    .log-msg .off{color:var(--red);}
+    .log-msg .occ.LOW{color:var(--green);}
+    .log-msg .occ.MEDIUM{color:var(--amber);}
+    .log-msg .occ.HIGH{color:var(--red);}
+
+    #fileInput{display:none;}
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="hdr-logo">🎓</div>
+  <div class="hdr-title">
+    <h1>Smart Classroom Edge AI System</h1>
+    <p>Edge AI Occupancy Monitoring &amp; Automated HVAC Control</p>
+  </div>
+  <div class="hdr-file" onclick="document.getElementById('fileInput').click()">
+    <span>🎬</span><span id="hdrFileName">Upload Video</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:5px;font-size:.68rem;color:var(--text2);">
+    <div class="api-dot" id="apiDot"></div><span id="apiStatus">Connecting...</span>
+  </div>
+</header>
+
+<input type="file" id="fileInput" accept="video/*"/>
+
+<div class="body">
+
+  <!-- ── Video Panel ── -->
+  <div class="video-panel">
+    <div class="video-header">
+      <span style="color:var(--cyan);font-size:.75rem;">📹</span>
+      <h2>Live Edge AI Feed</h2>
+      <div class="live-badge" id="liveBadge" style="display:none;"><div class="live-dot"></div> Live Stream</div>
+    </div>
+
+    <div class="video-wrap" id="videoWrap">
+      <div class="video-placeholder" id="videoPlaceholder">
+        <div class="ph-icon">🎬</div>
+        <p>Upload a classroom video to begin</p>
+        <button onclick="document.getElementById('fileInput').click()" style="margin-top:6px;padding:6px 16px;border-radius:7px;background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.3);color:var(--cyan);cursor:pointer;font-size:.72rem;font-family:Inter,sans-serif;">Choose Video</button>
+      </div>
+      <video id="videoEl"></video>
+      <canvas id="displayCanvas" style="display:none;"></canvas>
+      <div class="occupancy-badge LOW" id="occupancyBadge" style="display:none;">LOW</div>
+      <div class="person-count" id="personCountBadge" style="display:none;">👤 0</div>
+      <div class="fps-badge" id="fpsBadge" style="display:none;">0 fps</div>
+    </div>
+
+    <div class="video-progress"><div class="video-progress-fill" id="videoProgressFill"></div></div>
+
+    <div class="video-controls">
+      <button class="ctrl-btn play" id="btnPlay" onclick="playVideo()" disabled>▶ Play</button>
+      <button class="ctrl-btn pause" id="btnPause" onclick="pauseVideo()" disabled>⏸ Pause</button>
+      <button class="ctrl-btn stop" id="btnStop" onclick="stopVideo()" disabled>⏹ Stop</button>
+      <div class="ctrl-spacer"></div>
+      <div class="ac-status-bar off" id="acStatusBar">
+        <span id="acStatusIcon">⬜</span> AC: <b id="acStateTxt">OFF</b>
+      </div>
+      <div class="frame-info" id="frameInfo">0 frames</div>
+    </div>
+  </div>
+
+  <!-- ── Right Column ── -->
+  <div class="right-col">
+
+    <!-- System Metrics -->
+    <div class="card">
+      <div class="card-hdr"><span>📊</span> System Metrics</div>
+      <div class="metrics-grid">
+        <div class="metric"><div class="metric-label">Occupancy</div><div class="metric-value low" id="mOccupancy">LOW</div></div>
+        <div class="metric"><div class="metric-label">AC State</div><div class="metric-value ac-off" id="mAcState">OFF</div></div>
+        <div class="metric"><div class="metric-label">AC Temp</div><div class="metric-value temp" id="mAcTemp">—</div></div>
+        <div class="metric"><div class="metric-label">Uptime</div><div class="metric-value" style="color:var(--text1)" id="mUptime">00:00:00</div></div>
+      </div>
+      <div class="run-row">
+        <span style="font-size:.58rem;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;">AC Runtime</span>
+        <div class="run-bar-bg"><div class="run-bar-fill" id="acRunBar"></div></div>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--cyan);" id="acRunTime">00:00:00</span>
+      </div>
+    </div>
+
+    <!-- AC Control -->
+    <div class="card">
+      <div class="card-hdr"><span>❄️</span> Automated AC Control</div>
+      <div class="mode-row">
+        <button class="mode-btn auto active" id="btnAuto" onclick="setMode('auto')">🤖 Automatic</button>
+        <button class="mode-btn manual" id="btnManual" onclick="setMode('manual')">🖐 Manual</button>
+      </div>
+      <div class="auto-msg auto" id="modeMsg"><span>🤖</span> Automatic Mode — AI controls the AC</div>
+
+      <div class="ac-display">
+        <div class="ac-top">
+          <div>
+            <div class="fan-label" id="fanLabel">Fan: OFF</div>
+            <div style="display:flex;align-items:baseline;gap:3px;">
+              <div class="ac-temp-big off" id="acTempBig">—</div>
+              <span style="font-size:.9rem;color:var(--text2);" id="acTempUnit"></span>
+            </div>
+          </div>
+          <div class="ac-pills">
+            <div class="ac-pill eco" id="ecoLabel" style="display:none;">Eco</div>
+            <div class="ac-pill ac-off" id="acPill">AC OFF</div>
+          </div>
+        </div>
+        <div class="temp-bar"><div class="temp-bar-fill" id="tempBarFill" style="width:0%;"></div></div>
+        <div class="target-temp" id="targetTemp">Target: —</div>
+      </div>
+
+      <div class="manual-controls" id="manualControls">
+        <div style="font-size:.62rem;color:var(--text3);margin:7px 0 5px;">Manual Override</div>
+        <div class="manual-row">
+          <span class="manual-label">AC State:</span>
+          <div class="manual-btns">
+            <button class="m-btn" onclick="manualAC('on')">ON</button>
+            <button class="m-btn" onclick="manualAC('off')">OFF</button>
+          </div>
+        </div>
+        <div class="manual-row">
+          <span class="manual-label">Temperature:</span>
+          <div class="manual-btns">
+            <button class="m-btn" onclick="manualTemp(18)">18°</button>
+            <button class="m-btn" onclick="manualTemp(20)">20°</button>
+            <button class="m-btn" onclick="manualTemp(24)">24°</button>
+            <button class="m-btn" onclick="manualTemp(26)">26°</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Thresholds -->
+    <div class="card">
+      <div class="card-hdr">
+        <span>⚙️</span> Thresholds
+        <span style="font-size:.55rem;color:var(--purple);background:rgba(139,92,246,.15);padding:1px 5px;border-radius:8px;">EXTRA CREDIT</span>
+      </div>
+      <div class="threshold-grid">
+        <div class="thresh-item">
+          <div class="thresh-label">MEDIUM from</div>
+          <div class="thresh-row"><input class="thresh-input" type="number" id="tLowMax" value="2" min="1" max="20" onchange="applyThresholds()"/><span class="thresh-unit">persons</span></div>
+        </div>
+        <div class="thresh-item">
+          <div class="thresh-label">HIGH from</div>
+          <div class="thresh-row"><input class="thresh-input" type="number" id="tMedMax" value="9" min="1" max="50" onchange="applyThresholds()"/><span class="thresh-unit">persons</span></div>
+        </div>
+        <div class="thresh-item">
+          <div class="thresh-label">MEDIUM °C</div>
+          <div class="thresh-row"><input class="thresh-input" type="number" id="tMedTemp" value="24" min="16" max="30" onchange="applyThresholds()"/><span class="thresh-unit">°C</span></div>
+        </div>
+        <div class="thresh-item">
+          <div class="thresh-label">HIGH °C</div>
+          <div class="thresh-row"><input class="thresh-input" type="number" id="tHighTemp" value="20" min="16" max="30" onchange="applyThresholds()"/><span class="thresh-unit">°C</span></div>
+        </div>
+      </div>
+      <div class="thresh-summary" id="threshSummary"></div>
+    </div>
+
+  </div>
+
+  <!-- ── Bottom Panel ── -->
+  <div class="bottom-panel">
+    <div class="card" style="padding:10px 12px;">
+      <div class="card-hdr" style="margin-bottom:6px;"><span>📈</span> Occupancy Timeline</div>
+      <canvas id="timelineCanvas"></canvas>
+    </div>
+    <div class="card" style="padding:10px 12px;">
+      <div class="card-hdr" style="margin-bottom:6px;">
+        <span>📋</span> AC Event Log
+        <button onclick="clearLog()" style="margin-left:auto;font-size:.6rem;background:none;border:none;color:var(--text3);cursor:pointer;">Clear</button>
+      </div>
+      <div class="ac-log" id="acLog"><div style="color:var(--text3);font-size:.68rem;text-align:center;padding:12px 0;">No events yet</div></div>
+    </div>
+  </div>
+
+</div><!-- end body -->
+
+<script>
+const API = 'http://localhost:8000';
+
+// ── Smoothing / Debounce Config ────────────────────────────────────────
+const COUNT_WINDOW      = 7;    // rolling buffer size for person counts
+const OCCUPANCY_CONFIRM = 3;    // consecutive frames before occupancy changes
+const INFERENCE_INTERVAL= 600;  // ms between API calls (not blocking video)
+const RENDER_FPS        = 30;   // target canvas render fps
+
+// ── State ─────────────────────────────────────────────────────────────
+let videoFile       = null;
+let isPlaying       = false;
+let mode            = 'auto';
+let thresholds      = { lowMax:2, medMax:9, medTemp:24, highTemp:20 };
+
+// Smoothing state
+let countBuffer     = [];       // rolling window of recent person counts
+let pendingOcc      = null;     // candidate new occupancy
+let pendingOccCount = 0;        // how many consecutive frames agree
+let stableOccupancy = 'LOW';    // confirmed stable occupancy
+let displayCount    = 0;        // smoothed person count shown on screen
+
+// AC state
+let currentAcState  = 'OFF';
+let manualAcTemp    = 24;
+
+// Timing
+let uptimeStart     = null;
+let uptimeInterval  = null;
+let acRunStart      = null;
+let acRunTotal      = 0;
+
+// Inference
+let inferenceTimer  = null;
+let frameCount      = 0;
+let lastAnnotatedB64= null;
+let isInferring     = false;
+
+// Render loop
+let rafId           = null;
+let lastRafTime     = 0;
+let inferFps        = 0;
+let inferFpsTimes   = [];
+
+// Timeline
+let timelineData    = [];
+let logCount        = 0;
+
+// ── API Check ─────────────────────────────────────────────────────────
+async function checkApi() {
+  try {
+    const r = await fetch(`${API}/health`, { signal: AbortSignal.timeout(2000) });
+    const ok = r.ok;
+    document.getElementById('apiDot').className = ok ? 'api-dot' : 'api-dot off';
+    document.getElementById('apiStatus').textContent = ok ? 'API Online' : 'API Offline';
+  } catch {
+    document.getElementById('apiDot').className = 'api-dot off';
+    document.getElementById('apiStatus').textContent = 'API Offline';
+  }
+}
+checkApi(); setInterval(checkApi, 5000);
+
+// ── File Input ────────────────────────────────────────────────────────
+document.getElementById('fileInput').addEventListener('change', e => {
+  const f = e.target.files[0];
+  if (!f) return;
+  videoFile = f;
+  document.getElementById('hdrFileName').textContent = f.name;
+  const video = document.getElementById('videoEl');
+  video.src = URL.createObjectURL(f);
+  video.load();
+  video.addEventListener('loadedmetadata', () => {
+    showVideoUI();
+    logEvent(`Video loaded: ${f.name}`, 'info');
+  }, { once: true });
+});
+
+function showVideoUI() {
+  document.getElementById('videoPlaceholder').style.display = 'none';
+  document.getElementById('displayCanvas').style.display = 'block';
+  document.getElementById('occupancyBadge').style.display = 'block';
+  document.getElementById('personCountBadge').style.display = 'block';
+  document.getElementById('fpsBadge').style.display = 'block';
+  document.getElementById('liveBadge').style.display = 'flex';
+  document.getElementById('btnPlay').disabled = false;
+  document.getElementById('btnStop').disabled = false;
+}
+
+// ── Video Controls ────────────────────────────────────────────────────
+function playVideo() {
+  const v = document.getElementById('videoEl');
+  v.play().catch(()=>{});
+  isPlaying = true;
+  document.getElementById('btnPause').disabled = false;
+  if (!uptimeStart) { uptimeStart = Date.now(); startUptimeTimer(); }
+  startRenderLoop();
+  startInferenceLoop();
+  logEvent('Playback started', 'info');
+}
+
+function pauseVideo() {
+  document.getElementById('videoEl').pause();
+  isPlaying = false;
+  stopInferenceLoop();
+  logEvent('Paused', 'info');
+}
+
+function stopVideo() {
+  const v = document.getElementById('videoEl');
+  v.pause(); v.currentTime = 0;
+  isPlaying = false;
+  stopInferenceLoop();
+  cancelAnimationFrame(rafId);
+  frameCount = 0;
+  lastAnnotatedB64 = null;
+  document.getElementById('frameInfo').textContent = '0 frames';
+  document.getElementById('btnPause').disabled = true;
+  document.getElementById('videoProgressFill').style.width = '0%';
+  countBuffer = []; pendingOcc = null; pendingOccCount = 0;
+  logEvent('Stopped', 'info');
+  forceOccupancy('LOW');
+}
+
+// ── Render Loop (smooth, non-blocking) ────────────────────────────────
+function startRenderLoop() {
+  cancelAnimationFrame(rafId);
+  renderFrame();
+}
+
+function renderFrame(ts = 0) {
+  rafId = requestAnimationFrame(renderFrame);
+
+  const video  = document.getElementById('videoEl');
+  const canvas = document.getElementById('displayCanvas');
+  if (!video.videoWidth) return;
+
+  // Resize canvas to video dimensions
+  if (canvas.width !== video.videoWidth) canvas.width = video.videoWidth;
+  if (canvas.height!== video.videoHeight) canvas.height = video.videoHeight;
+
+  const ctx = canvas.getContext('2d');
+
+  // Always draw the live video frame first (smooth playback)
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+  // Overlay latest detection boxes if available
+  if (lastAnnotatedB64) {
+    const img = new Image();
+    img.onload = () => ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    img.src = `data:image/jpeg;base64,${lastAnnotatedB64}`;
+    lastAnnotatedB64 = null; // only draw once per result
+  }
+
+  // Update progress bar
+  if (video.duration) {
+    const pct = (video.currentTime / video.duration) * 100;
+    document.getElementById('videoProgressFill').style.width = pct + '%';
+  }
+
+  // Video ended
+  if (video.ended) {
+    stopInferenceLoop();
+    logEvent('Video ended', 'info');
+    forceOccupancy('LOW');
+  }
+}
+
+// ── Inference Loop (separate from render, async) ──────────────────────
+function startInferenceLoop() {
+  stopInferenceLoop();
+  inferenceTimer = setInterval(runInference, INFERENCE_INTERVAL);
+}
+
+function stopInferenceLoop() {
+  clearInterval(inferenceTimer);
+  inferenceTimer = null;
+}
+
+async function runInference() {
+  const video = document.getElementById('videoEl');
+  if (video.paused || video.ended || isInferring) return;
+  if (!video.videoWidth) return;
+
+  isInferring = true;
+  try {
+    // Capture current frame to offscreen canvas
+    const oc  = document.createElement('canvas');
+    oc.width  = Math.min(video.videoWidth,  640);
+    oc.height = Math.min(video.videoHeight, 640 * video.videoHeight / video.videoWidth);
+    const ctx = oc.getContext('2d');
+    ctx.drawImage(video, 0, 0, oc.width, oc.height);
+    const frameB64 = oc.toDataURL('image/jpeg', 0.7).split(',')[1];
+
+    const r = await fetch(`${API}/detect/frame`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        frame_b64: frameB64,
+        conf: 0.25,
+        low_max  : thresholds.lowMax,
+        med_max  : thresholds.medMax,
+        med_temp : thresholds.medTemp,
+        high_temp: thresholds.highTemp,
+      }),
+    });
+
+    if (!r.ok) return;
+    const data = await r.json();
+
+    // ── FPS tracking ──
+    const now = Date.now();
+    inferFpsTimes.push(now);
+    inferFpsTimes = inferFpsTimes.filter(t => now - t < 2000);
+    inferFps = Math.round(inferFpsTimes.length / 2);
+    document.getElementById('fpsBadge').textContent = `${inferFps} inf/s`;
+
+    frameCount++;
+    document.getElementById('frameInfo').textContent = `${frameCount} frames`;
+
+    // Store annotated image for next render frame draw
+    lastAnnotatedB64 = data.annotated_b64;
+
+    // ── Smooth count with rolling buffer ──
+    const rawCount = data.person_count ?? 0;
+    countBuffer.push(rawCount);
+    if (countBuffer.length > COUNT_WINDOW) countBuffer.shift();
+
+    // Median of buffer → stable smoothed count
+    const sorted       = [...countBuffer].sort((a,b)=>a-b);
+    const smoothCount  = sorted[Math.floor(sorted.length / 2)];
+
+    // Animate displayed count gradually
+    animateCount(smoothCount);
+
+    // ── Occupancy debounce ──
+    const candidateOcc = classifyOccupancy(smoothCount);
+    if (candidateOcc === stableOccupancy) {
+      pendingOcc = null; pendingOccCount = 0;
+    } else {
+      if (candidateOcc === pendingOcc) {
+        pendingOccCount++;
+        if (pendingOccCount >= OCCUPANCY_CONFIRM) {
+          // Confirmed: switch occupancy
+          forceOccupancy(candidateOcc);
+          pendingOcc = null; pendingOccCount = 0;
+        }
+      } else {
+        pendingOcc = candidateOcc; pendingOccCount = 1;
+      }
+    }
+
+    // Timeline
+    timelineData.push({ occ: stableOccupancy, ts: Date.now() });
+    if (timelineData.length > 100) timelineData.shift();
+    drawTimeline();
+
+  } catch(e) { /* silently ignore */ }
+  finally { isInferring = false; }
+}
+
+// ── Count animation (smooth number transition) ─────────────────────────
+let displayedCount = 0;
+let countAnimId = null;
+function animateCount(target) {
+  cancelAnimationFrame(countAnimId);
+  const step = () => {
+    const diff = target - displayedCount;
+    if (Math.abs(diff) < 0.5) {
+      displayedCount = target;
+      document.getElementById('personCountBadge').textContent = `👤 ${target}`;
+      return;
+    }
+    displayedCount += diff * 0.25;
+    document.getElementById('personCountBadge').textContent = `👤 ${Math.round(displayedCount)}`;
+    countAnimId = requestAnimationFrame(step);
+  };
+  countAnimId = requestAnimationFrame(step);
+}
+
+// ── Occupancy / AC ────────────────────────────────────────────────────
+function classifyOccupancy(n) {
+  if (n <= thresholds.lowMax)  return 'LOW';
+  if (n <= thresholds.medMax)  return 'MEDIUM';
+  return 'HIGH';
+}
+
+function forceOccupancy(occ) {
+  const prev = stableOccupancy;
+  stableOccupancy = occ;
+
+  // Update badge
+  const badge = document.getElementById('occupancyBadge');
+  badge.textContent = occ;
+  badge.className   = `occupancy-badge ${occ}`;
+
+  // AC update
+  if (mode === 'auto') applyAC(occ);
+
+  // Log event on change
+  if (occ !== prev) {
+    const acS = occ === 'LOW' ? 'OFF' : 'ON';
+    const temp = occ === 'LOW' ? null : occ === 'MEDIUM' ? thresholds.medTemp : thresholds.highTemp;
+    logEvent(
+      `Occupancy → <span class="occ ${occ}">${occ}</span> · AC <span class="${acS.toLowerCase()}">${acS}</span>${temp?` @ ${temp}°C`:''}`,
+      acS === 'ON' ? 'on' : 'off'
+    );
+    timelineData.push({ occ, ts: Date.now() });
+    drawTimeline();
+  }
+}
+
+function applyAC(occ) {
+  let state, temp, fan;
+  if (occ === 'LOW')          { state='OFF'; temp=null;                     fan='OFF'; }
+  else if (occ === 'MEDIUM')  { state='ON';  temp=thresholds.medTemp;       fan='Low'; }
+  else                        { state='ON';  temp=thresholds.highTemp;      fan='High'; }
+  renderAC(state, temp, fan, occ);
+}
+
+function renderAC(state, temp, fan, occ) {
+  const prev = currentAcState;
+  currentAcState = state;
+
+  // AC runtime tracking
+  if (state === 'ON' && prev !== 'ON') acRunStart = Date.now();
+  else if (state === 'OFF' && prev === 'ON') {
+    if (acRunStart) acRunTotal += (Date.now() - acRunStart) / 1000;
+    acRunStart = null;
+  }
+
+  // Metrics
+  const occEl = document.getElementById('mOccupancy');
+  occEl.textContent = occ; occEl.className = `metric-value ${occ.toLowerCase()}`;
+  const stEl = document.getElementById('mAcState');
+  stEl.textContent = state; stEl.className = `metric-value ${state==='ON'?'ac-on':'ac-off'}`;
+  document.getElementById('mAcTemp').textContent = temp ? `${temp}°C` : '—';
+
+  // Big display
+  const big = document.getElementById('acTempBig');
+  big.textContent = temp || '—'; big.className = `ac-temp-big${!temp?' off':''}`;
+  document.getElementById('acTempUnit').textContent = temp ? '°C' : '';
+  document.getElementById('fanLabel').textContent = `Fan: ${fan}`;
+
+  // Pill
+  const pill = document.getElementById('acPill');
+  pill.textContent = `AC ${state}`; pill.className = `ac-pill ${state==='ON'?'ac-on':'ac-off'}`;
+  document.getElementById('ecoLabel').style.display = occ==='MEDIUM' ? 'block' : 'none';
+
+  // Temp bar
+  const pct = temp ? Math.max(0, Math.min(100, ((30-temp)/14)*100)) : 0;
+  document.getElementById('tempBarFill').style.width = pct + '%';
+  document.getElementById('targetTemp').textContent = temp ? `Target: ${temp}°C` : 'Target: —';
+
+  // Status bar in video controls
+  const bar = document.getElementById('acStatusBar');
+  bar.className = `ac-status-bar ${state==='ON'?'on':'off'}`;
+  document.getElementById('acStateTxt').textContent = state;
+  document.getElementById('acStatusIcon').textContent = state==='ON' ? '❄️' : '⬜';
+}
+
+// ── Mode ──────────────────────────────────────────────────────────────
+function setMode(m) {
+  mode = m;
+  document.getElementById('btnAuto').className   = `mode-btn auto${m==='auto'?' active':''}`;
+  document.getElementById('btnManual').className = `mode-btn manual${m==='manual'?' active':''}`;
+  const msg = document.getElementById('modeMsg');
+  msg.className = `auto-msg ${m}`;
+  msg.innerHTML = m==='auto'
+    ? '🤖 Automatic Mode — AI controls the AC'
+    : '🖐 Manual Mode — You control the AC';
+  document.getElementById('manualControls').className = `manual-controls${m==='manual'?' show':''}`;
+}
+
+function manualAC(s) {
+  if (mode !== 'manual') return;
+  const st = s.toUpperCase();
+  renderAC(st, st==='ON' ? manualAcTemp : null, st==='ON' ? 'Low' : 'OFF', stableOccupancy);
+  logEvent(`Manual: AC <span class="${s}">${st}</span>${st==='ON'?` @ ${manualAcTemp}°C`:''}`, s==='on'?'on':'off');
+}
+
+function manualTemp(t) {
+  manualAcTemp = t;
+  if (currentAcState === 'ON' && mode === 'manual')
+    renderAC('ON', t, 'Low', stableOccupancy);
+}
+
+// ── Thresholds ────────────────────────────────────────────────────────
+function applyThresholds() {
+  thresholds = {
+    lowMax  : parseInt(document.getElementById('tLowMax').value)  || 2,
+    medMax  : parseInt(document.getElementById('tMedMax').value)  || 9,
+    medTemp : parseInt(document.getElementById('tMedTemp').value) || 24,
+    highTemp: parseInt(document.getElementById('tHighTemp').value)|| 20,
+  };
+  document.getElementById('threshSummary').innerHTML =
+    `LOW 0–${thresholds.lowMax} → AC OFF &nbsp;|&nbsp; ` +
+    `MED ${thresholds.lowMax+1}–${thresholds.medMax} → ${thresholds.medTemp}°C &nbsp;|&nbsp; ` +
+    `HIGH ≥${thresholds.medMax+1} → ${thresholds.highTemp}°C`;
+}
+
+// ── Uptime ────────────────────────────────────────────────────────────
+function startUptimeTimer() {
+  clearInterval(uptimeInterval);
+  uptimeInterval = setInterval(() => {
+    const s = Math.floor((Date.now() - uptimeStart) / 1000);
+    document.getElementById('mUptime').textContent = fmtSec(s);
+    let run = acRunTotal;
+    if (acRunStart) run += (Date.now() - acRunStart) / 1000;
+    document.getElementById('acRunTime').textContent = fmtSec(Math.floor(run));
+    document.getElementById('acRunBar').style.width =
+      s > 0 ? Math.min(100, (run/s)*100) + '%' : '0%';
+  }, 1000);
+}
+
+function fmtSec(s) {
+  const h=Math.floor(s/3600), m=Math.floor((s%3600)/60), sec=s%60;
+  return `${pad(h)}:${pad(m)}:${pad(sec)}`;
+}
+function pad(n){ return String(n).padStart(2,'0'); }
+
+// ── Timeline Chart ────────────────────────────────────────────────────
+const OCC_COLOR = { LOW:'#22c55e', MEDIUM:'#f59e0b', HIGH:'#ef4444' };
+const OCC_VAL   = { LOW:1, MEDIUM:2, HIGH:3 };
+
+function drawTimeline() {
+  const canvas = document.getElementById('timelineCanvas');
+  const W = canvas.offsetWidth; canvas.width = W;
+  const H = canvas.height;
+  const ctx = canvas.getContext('2d');
+  const pad = { t:4, b:16, l:26, r:4 };
+  const cW = W-pad.l-pad.r, cH = H-pad.t-pad.b;
+  ctx.clearRect(0, 0, W, H);
+  if (timelineData.length < 2) return;
+
+  // Grid
+  ctx.strokeStyle = 'rgba(255,255,255,0.05)'; ctx.lineWidth = 1;
+  [1,2,3].forEach(v => {
+    const y = pad.t + cH - ((v-1)/2)*cH;
+    ctx.beginPath(); ctx.moveTo(pad.l,y); ctx.lineTo(W-pad.r,y); ctx.stroke();
+  });
+
+  // Labels
+  ctx.fillStyle='rgba(148,163,184,0.5)'; ctx.font='7px JetBrains Mono';
+  ctx.fillText('HI',2,pad.t+5); ctx.fillText('MD',2,pad.t+cH/2+3); ctx.fillText('LO',2,pad.t+cH+2);
+
+  const step = cW / (timelineData.length - 1);
+
+  for (let i=0; i<timelineData.length-1; i++) {
+    const d0=timelineData[i], d1=timelineData[i+1];
+    const x0=pad.l+i*step, x1=pad.l+(i+1)*step;
+    const y0=pad.t+cH-((OCC_VAL[d0.occ]-1)/2)*cH;
+    const g=ctx.createLinearGradient(0,y0,0,H);
+    g.addColorStop(0,OCC_COLOR[d0.occ]+'44'); g.addColorStop(1,OCC_COLOR[d0.occ]+'00');
+    ctx.beginPath(); ctx.moveTo(x0,H-pad.b); ctx.lineTo(x0,y0); ctx.lineTo(x1,y0); ctx.lineTo(x1,H-pad.b);
+    ctx.fillStyle=g; ctx.fill();
+    ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(x1,y0);
+    ctx.strokeStyle=OCC_COLOR[d0.occ]; ctx.lineWidth=2; ctx.stroke();
+  }
+}
+
+// ── AC Log ────────────────────────────────────────────────────────────
+function logEvent(msg, type='info') {
+  const log = document.getElementById('acLog');
+  if (logCount === 0) log.innerHTML = '';
+  logCount++;
+  const now = new Date();
+  const ts  = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+  const el  = document.createElement('div');
+  el.className = 'log-entry';
+  el.innerHTML = `<span class="log-time">${ts}</span><span class="log-msg">${msg}</span>`;
+  log.insertBefore(el, log.firstChild);
+  while (log.children.length > 40) log.removeChild(log.lastChild);
+}
+
+function clearLog() {
+  document.getElementById('acLog').innerHTML='<div style="color:var(--text3);font-size:.68rem;text-align:center;padding:12px 0;">No events yet</div>';
+  logCount=0;
+}
+
+// ── Init ──────────────────────────────────────────────────────────────
+applyThresholds();
+renderAC('OFF', null, 'OFF', 'LOW');
+</script>
+</body>
+</html>
