@@ -12,16 +12,16 @@ Made with ❤️ by **Group 02** · University of Jaffna · 2026
                     S.G.S.I.Abeyrathne   
                     Thyaparan Kavishan
 
-<div align="center">
 
-| | |
-|---|---|
-| 🏛️ **Institution** | University of Jaffna |
-| 📚 **Module** | Edge Computing |
-| 👨‍👩‍👦‍👦 **Group** | Group 03 |
-| 🎓 **Batch** | Class of 2026 |
 
-</div>
+
+
+| 🏛️ **Institution** : University of Jaffna |
+| 📚 **Module** : Edge Computing |
+| 👨‍👩‍👦‍👦 **Group** : Group 02 |
+| 🎓 **Batch** : Class of 2026 |
+
+
 
 ## Tech Stack & Badges
 
