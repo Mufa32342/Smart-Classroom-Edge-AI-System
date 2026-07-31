@@ -2,7 +2,7 @@
 
 Made with ❤️ by **Group 02** · University of Jaffna · 2026
 
-## Team
+## 👥 Team
 1. Product Owner: G.A.K.Nipuni Dilhara Jayasooriya
 2. Project Manager: M.M.M.Mufazeer
 3. App Developers:    M.N.M.Rikas   
@@ -12,7 +12,16 @@ Made with ❤️ by **Group 02** · University of Jaffna · 2026
                     S.G.S.I.Abeyrathne   
                     Thyaparan Kavishan
 
-**Institute:** University of Jaffna      **Module:** Edge Computing       **Batch:** Class of 2026  
+<div align="center">
+
+| | |
+|---|---|
+| 🏛️ **Institution** | University of Jaffna |
+| 📚 **Module** | Edge Computing |
+| 👨‍👩‍👦‍👦 **Group** | Group 03 |
+| 🎓 **Batch** | Class of 2026 |
+
+</div>
 
 ## Tech Stack & Badges
 
@@ -362,18 +371,6 @@ classroom-detector/
 
 ---
 
-## 👥 Team
-
-<div align="center">
-
-| | |
-|---|---|
-| 🏛️ **Institution** | University of Jaffna |
-| 📚 **Module** | Edge Computing |
-| 👨‍👩‍👦‍👦 **Group** | Group 03 |
-| 🎓 **Batch** | Class of 2026 |
-
-</div>
 
 ---
 
