@@ -1,30 +1,5 @@
 # 🏫 Smart Classroom Edge AI System
 
-Made with ❤️ by **Group 02** · University of Jaffna · 2026
-## 👥 Team
-1. Product Owner:-
-      🧑‍🎓 G.A.K. Nipuni Dilhara Jayasooriya(https://github.com/dilhara918)
-
-2. Scrum Master:- 
-      🧑‍🎓 M.M.M. Mufazzeer(https://github.com/Mufa32342)
-
-3. App Developers:-
-      🧑‍🎓 M.N.M. Rikas(https://github.com/RikasMhd)
-      🧑‍🎓 Dilukji Vimalanathan(https://github.com/Dilukji)
-      🧑‍🎓 D.S.N. Ananda(https://github.com/Nethmin2002)
-
-4. Data Scientists:-
-      🧑‍🎓 R.P.S. Kulathunga(https://github.com/pathum-ts)
-      🧑‍🎓 Thyaparan Kavishan (https://github.com/kavishan2022) 
-      🧑‍🎓 S.G.S.I. Abeyarathne(https://github.com/SanjeewaIA)
-
-🏛️ **Institution**:- University of Jaffna
-📚 **Module**:- Edge Computing
-👨‍👩‍👦‍👦 **Group**:- Group 02
-🎓 **Batch**:- Class of 2026
-
-
-## 📖 Resources
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 [![YOLOv8](https://img.shields.io/badge/YOLOv8-Ultralytics-FF6B35?style=for-the-badge&logo=yolo&logoColor=white)](https://ultralytics.com)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100%2B-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
@@ -33,6 +8,8 @@ Made with ❤️ by **Group 02** · University of Jaffna · 2026
 [![University](https://img.shields.io/badge/University%20of%20Jaffna-Class%20of%202026-8B0000?style=for-the-badge)](https://www.jfn.ac.lk)
 
 **YOLOv8-powered real-time classroom occupancy detection with automated AC climate control simulation.**
+
+*Edge Computing — University of Jaffna · Group 03 · Class of 2026*
 
 ---
 
@@ -63,6 +40,7 @@ Designed and built as part of the **Edge Computing** module at the **University 
 
 ## 🏗️ System Architecture
 
+```
 ┌─────────────────────────────────────────────────────────────────┐
 │                        INPUT SOURCES                            │
 │         📷 Webcam / 🖼️ Image Upload / 🎞️ Video Upload          │
@@ -72,10 +50,10 @@ Designed and built as part of the **Edge Computing** module at the **University 
 ┌─────────────────────────────────────────────────────────────────┐
 │                   FASTAPI BACKEND  (port 8000)                  │
 │                                                                 │
-│   ┌─────────────────┐        ┌──────────────────────────────┐   │
-│   │   main.py       │◄──────►│   detector.py                │   │
-│   │  REST API layer │        │   YOLOv8 Inference Engine    │   │
-│   └─────────────────┘        │   (best.pt / best.onnx)      │   │
+│   ┌─────────────────┐        ┌──────────────────────────────┐  │
+│   │   main.py       │◄──────►│   detector.py                │  │
+│   │  REST API layer │        │   YOLOv8 Inference Engine    │  │
+│   └─────────────────┘        │   (best.pt / best.onnx)      │  │
 │                               └──────────────────────────────┘  │
 │                                                                 │
 │   Classes Detected: Janitor · Lecture · Person                  │
@@ -85,9 +63,9 @@ Designed and built as part of the **Edge Computing** module at the **University 
 ┌─────────────────────────────────────────────────────────────────┐
 │               OCCUPANCY CLASSIFICATION ENGINE                   │
 │                                                                 │
-│   LOW    (0–2 persons)  →  AC OFF                               │
-│   MEDIUM (3–9 persons)  →  AC ON @ 24°C                         │
-│   HIGH   (10+ persons)  →  AC ON @ 20°C                         │
+│   LOW    (0–2 persons)  →  AC OFF                              │
+│   MEDIUM (3–9 persons)  →  AC ON @ 24°C                        │
+│   HIGH   (10+ persons)  →  AC ON @ 20°C                        │
 └────────────────────────────┬────────────────────────────────────┘
                              │
                              ▼
@@ -96,6 +74,7 @@ Designed and built as part of the **Edge Computing** module at the **University 
 │   🖥️  index.html       — Video/Image Detection Dashboard        │
 │   ❄️  ac_dashboard.html — Smart AC Control Dashboard            │
 └─────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
@@ -115,6 +94,8 @@ Designed and built as part of the **Edge Computing** module at the **University 
 
 ## 🛠️ Prerequisites
 
+Before you begin, ensure you have the following:
+
 | Requirement | Version | Purpose |
 |---|---|---|
 | 🐍 Python | 3.10+ | Backend runtime |
@@ -132,8 +113,8 @@ Designed and built as part of the **Edge Computing** module at the **University 
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/Mufa32342/Smart-Classroom-Edge-AI-System.git
-cd Smart-Classroom-Edge-AI-System
+git clone https://github.com/your-username/classroom-detector.git
+cd classroom-detector
 ```
 
 ### 2. Install Backend Dependencies
@@ -345,8 +326,9 @@ The system automatically determines the AC state based on the **total number of 
 ---
 
 ## 📁 Project Structure
+
 ```
-Smart-Classroom-Edge-AI-System/
+classroom-detector/
 │
 ├── 📓 classroom_yolo_train.ipynb     # Google Colab training notebook
 ├── 📄 README.md                      # Project documentation (this file)
@@ -362,8 +344,25 @@ Smart-Classroom-Edge-AI-System/
 └── 🌐 dashboard/
     ├── ac_dashboard.html             # Smart Classroom AC Control Dashboard
     └── index.html                    # Video / Image Detection Dashboard
----
 ```
+
+---
+
+## 👥 Team
+
+<div align="center">
+
+| | |
+|---|---|
+| 🏛️ **Institution** | University of Jaffna |
+| 📚 **Module** | Edge Computing |
+| 👨‍👩‍👦‍👦 **Group** | Group 03 |
+| 🎓 **Batch** | Class of 2026 |
+
+</div>
+
+---
+
 ## 📄 License
 
 This project is licensed under the **MIT License**.
@@ -371,7 +370,7 @@ This project is licensed under the **MIT License**.
 ```
 MIT License
 
-Copyright (c) 2026 Group 02 — University of Jaffna
+Copyright (c) 2026 Group 03 — University of Jaffna
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -392,5 +391,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
+---
+
+<div align="center">
+
+Made with ❤️ by **Group 03** · University of Jaffna · 2026
 
 *Edge Computing — Bringing AI to the Classroom Edge*
+
+</div>
