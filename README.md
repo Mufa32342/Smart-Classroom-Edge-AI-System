@@ -49,7 +49,7 @@ Made with ❤️ by **Group 02** · University of Jaffna · 2026
 - [API Reference](#-api-reference)
 - [AC Simulation Rules](#-ac-simulation-rules)
 - [Project Structure](#-project-structure)
-- [Team](#-team)
+- [Team](#-our-team)
 - [License](#-license)
 
 ---
