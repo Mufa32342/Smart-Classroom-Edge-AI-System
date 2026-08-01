@@ -15,9 +15,9 @@ Made with ❤️ by **Group 02** · University of Jaffna · 2026
              🎓 D.S.N.Ananda
    
 5. **Data Scientists:**
-               🎓 R.P.S.Kulathunga      
-               🎓 S.G.S.I.Abeyrathne   
-               🎓 Thyaparan Kavishan
+             🎓 R.P.S.Kulathunga      
+             🎓 S.G.S.I.Abeyrathne   
+             🎓 Thyaparan Kavishan
 
  🏛️ **Institution** : University of Jaffna |
  📚 **Module** : Edge Computing |
