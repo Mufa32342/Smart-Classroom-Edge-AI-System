@@ -9,7 +9,6 @@
 
 **YOLOv8-powered real-time classroom occupancy detection with automated AC climate control simulation.**
 
-*Edge Computing — University of Jaffna · Group 03 · Class of 2026*
 *Edge Computing — University of Jaffna · Group 02 · Class of 2026*
 
 ---
@@ -145,6 +144,14 @@ backend/
     ├── best.pt       ← Place your trained PyTorch weights here
     └── best.onnx     ← Place your exported ONNX model here
 ```
+❓ What about best.onnx?
+It's been excluded. The .onnx file can always be re-generated from best.pt using this one line inside the training notebook:
+
+from ultralytics import YOLO
+model = YOLO("backend/models/best.pt")
+model.export(format="onnx")
+
+---
 
 ### 4. Run the FastAPI Server
 
@@ -165,10 +172,10 @@ INFO:     YOLOv8 model loaded successfully
 
 Open either dashboard directly in your browser:
 
-| Dashboard | File | Purpose |
-|---|---|---|
-| 🖼️ Detection Dashboard | `dashboard/index.html` | Upload images/video for detection |
-| ❄️ AC Control Dashboard | `dashboard/ac_dashboard.html` | Live occupancy & AC status |
+| Dashboard                | File                           | Purpose                             |
+|--------------------------|------------------------------- |-------------------------------------|
+| 🖼️ Detection Dashboard   | `dashboard/index.html`        | Upload images/video for detection   |
+| ❄️ AC Control Dashboard  | `dashboard/ac_dashboard.html` | Live occupancy & AC status          |
 
 ```bash
 # Simply open the file in your browser (Windows)
@@ -351,16 +358,12 @@ classroom-detector/
 
 ## 👥 Team
 
-<div align="center">
-
-| | |
-|---|---|
-| 🏛️ **Institution** | University of Jaffna |
-| 📚 **Module** | Edge Computing |
-| 👨‍👩‍👦‍👦 **Group** | Group 03 |
-| 🎓 **Batch** | Class of 2026 |
-
-</div>
+|                    |                       |
+|--------------------|-----------------------|
+| 🏛️ **Institution** | University of Jaffna  |
+| 📚 **Module**      | Edge Computing        |
+| 👨‍👩‍👦‍👦 **Group**       | Group 03              |
+| 🎓 **Batch**       | Class of 2026         |
 
 ---
 
@@ -394,9 +397,7 @@ SOFTWARE.
 
 ---
 
-<div align="center">
-
-Made with ❤️ by **Group 03** · University of Jaffna · 2026
+Made with ❤️ by **Group 02** · University of Jaffna · 2026
 
 *Edge Computing — Bringing AI to the Classroom Edge*
 
