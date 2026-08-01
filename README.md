@@ -1,5 +1,28 @@
 # 🏫 Smart Classroom Edge AI System
 
+Made with ❤️ by **Group 02** · University of Jaffna · 2026
+
+## 👥 Team
+1. **Product Owner:** G.A.K.Nipuni Dilhara Jayasooriya
+2. **Project Manager:** M.M.M.Mufazeer
+3. **App Developers:**
+                   M.N.M.Rikas   
+                   Dilukji Vimalanathan   
+                   D.S.N.Ananda
+5. **Data Scientists:**
+                     R.P.S.Kulathunga      
+                     S.G.S.I.Abeyrathne   
+                     Thyaparan Kavishan
+
+ 🏛️ **Institution** : University of Jaffna |
+ 📚 **Module** : Edge Computing |
+ 👨‍👩‍👦‍👦 **Group** : Group 02 |
+ 🎓 **Batch** : Class of 2026 |
+
+
+
+## Tech Stack & Badges
+
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 [![YOLOv8](https://img.shields.io/badge/YOLOv8-Ultralytics-FF6B35?style=for-the-badge&logo=yolo&logoColor=white)](https://ultralytics.com)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100%2B-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
@@ -8,8 +31,6 @@
 [![University](https://img.shields.io/badge/University%20of%20Jaffna-Class%20of%202026-8B0000?style=for-the-badge)](https://www.jfn.ac.lk)
 
 **YOLOv8-powered real-time classroom occupancy detection with automated AC climate control simulation.**
-
-*Edge Computing — University of Jaffna · Group 02 · Class of 2026*
 
 ---
 
@@ -43,17 +64,17 @@ Designed and built as part of the **Edge Computing** module at the **University 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                        INPUT SOURCES                            │
-│         📷 Webcam / 🖼️ Image Upload / 🎞️ Video Upload          │
+│         📷 Webcam / 🖼️ Image Upload / 🎞️ Video Upload          |
 └────────────────────────────┬────────────────────────────────────┘
                              │
                              ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │                   FASTAPI BACKEND  (port 8000)                  │
 │                                                                 │
-│   ┌─────────────────┐        ┌──────────────────────────────┐  │
-│   │   main.py       │◄──────►│   detector.py                │  │
-│   │  REST API layer │        │   YOLOv8 Inference Engine    │  │
-│   └─────────────────┘        │   (best.pt / best.onnx)      │  │
+│   ┌─────────────────┐        ┌──────────────────────────────┐   │
+│   │   main.py       │◄──────►│   detector.py                │   │
+│   │  REST API layer │        │   YOLOv8 Inference Engine    │   │
+│   └─────────────────┘        │   (best.pt / best.onnx)      │   │
 │                               └──────────────────────────────┘  │
 │                                                                 │
 │   Classes Detected: Janitor · Lecture · Person                  │
@@ -63,9 +84,9 @@ Designed and built as part of the **Edge Computing** module at the **University 
 ┌─────────────────────────────────────────────────────────────────┐
 │               OCCUPANCY CLASSIFICATION ENGINE                   │
 │                                                                 │
-│   LOW    (0–2 persons)  →  AC OFF                              │
-│   MEDIUM (3–9 persons)  →  AC ON @ 24°C                        │
-│   HIGH   (10+ persons)  →  AC ON @ 20°C                        │
+│   LOW    (0–2 persons)  →  AC OFF                               │
+│   MEDIUM (3–9 persons)  →  AC ON @ 24°C                         │
+│   HIGH   (10+ persons)  →  AC ON @ 20°C                         │
 └────────────────────────────┬────────────────────────────────────┘
                              │
                              ▼
@@ -100,6 +121,7 @@ Before you begin, ensure you have the following:
 |---|---|---|
 | 🐍 Python | 3.10+ | Backend runtime |
 | 📦 pip | Latest | Package management |
+| 🐳 Docker Desktop | Latest | Containerized deployment |
 | 🌐 Google Colab | Free account | Model training |
 | 🤖 Trained Model | `best.pt` + `best.onnx` | YOLOv8 inference |
 | 🖥️ Modern Browser | Chrome / Firefox / Edge | Dashboard access |
@@ -113,7 +135,7 @@ Before you begin, ensure you have the following:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/classroom-detector.git
+git clone https://github.com/Mufa32342/classroom-detector.git
 cd classroom-detector
 ```
 
@@ -144,14 +166,6 @@ backend/
     ├── best.pt       ← Place your trained PyTorch weights here
     └── best.onnx     ← Place your exported ONNX model here
 ```
-❓ What about best.onnx?
-It's been excluded. The .onnx file can always be re-generated from best.pt using this one line inside the training notebook:
-
-from ultralytics import YOLO
-model = YOLO("backend/models/best.pt")
-model.export(format="onnx")
-
----
 
 ### 4. Run the FastAPI Server
 
@@ -172,10 +186,10 @@ INFO:     YOLOv8 model loaded successfully
 
 Open either dashboard directly in your browser:
 
-| Dashboard                | File                           | Purpose                             |
-|--------------------------|------------------------------- |-------------------------------------|
-| 🖼️ Detection Dashboard   | `dashboard/index.html`        | Upload images/video for detection   |
-| ❄️ AC Control Dashboard  | `dashboard/ac_dashboard.html` | Live occupancy & AC status          |
+| Dashboard | File | Purpose |
+|---|---|---|
+| 🖼️ Detection Dashboard | `dashboard/index.html` | Upload images/video for detection |
+| ❄️ AC Control Dashboard | `dashboard/ac_dashboard.html` | Live occupancy & AC status |
 
 ```bash
 # Simply open the file in your browser (Windows)
@@ -356,14 +370,6 @@ classroom-detector/
 
 ---
 
-## 👥 Team
-
-|                    |                       |
-|--------------------|-----------------------|
-| 🏛️ **Institution** | University of Jaffna  |
-| 📚 **Module**      | Edge Computing        |
-| 👨‍👩‍👦‍👦 **Group**       | Group 03              |
-| 🎓 **Batch**       | Class of 2026         |
 
 ---
 
@@ -397,7 +403,7 @@ SOFTWARE.
 
 ---
 
-Made with ❤️ by **Group 02** · University of Jaffna · 2026
+<div align="center">
 
 *Edge Computing — Bringing AI to the Classroom Edge*
 
