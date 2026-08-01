@@ -1,0 +1,35 @@
+# ════════════════════════════════════════════════════════════════════
+#  Smart Classroom Edge AI System — Docker Compose
+# ════════════════════════════════════════════════════════════════════
+
+services:
+  classroom-ai:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: classroom-detector:latest
+    container_name: classroom-ai-backend
+    ports:
+      - "8000:8000"        # API + Dashboard
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+    volumes:
+      # Optional: mount models folder so you can swap model without rebuild
+      - ./backend/models:/app/backend/models:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+# ── Usage ─────────────────────────────────────────────────────────────
+# Build and run:   docker compose up --build
+# Run background:  docker compose up -d
+# Stop:            docker compose down
+# View logs:       docker compose logs -f
+# API Docs:        http://localhost:8000/docs
+# AC Dashboard:    http://localhost:8000/dashboard/ac_dashboard.html
+# Video Dashboard: http://localhost:8000/dashboard/index.html
