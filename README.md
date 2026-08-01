@@ -9,7 +9,7 @@
 
 **YOLOv8-powered real-time classroom occupancy detection with automated AC climate control simulation.**
 
-*Edge Computing — University of Jaffna · Group 03 · Class of 2026*
+*Edge Computing — University of Jaffna · Group 02 · Class of 2026*
 
 ---
 
@@ -348,21 +348,6 @@ classroom-detector/
 
 ---
 
-## 👥 Team
-
-<div align="center">
-
-| | |
-|---|---|
-| 🏛️ **Institution** | University of Jaffna |
-| 📚 **Module** | Edge Computing |
-| 👨‍👩‍👦‍👦 **Group** | Group 03 |
-| 🎓 **Batch** | Class of 2026 |
-
-</div>
-
----
-
 ## 📄 License
 
 This project is licensed under the **MIT License**.
@@ -392,11 +377,3 @@ SOFTWARE.
 ```
 
 ---
-
-<div align="center">
-
-Made with ❤️ by **Group 03** · University of Jaffna · 2026
-
-*Edge Computing — Bringing AI to the Classroom Edge*
-
-</div>
