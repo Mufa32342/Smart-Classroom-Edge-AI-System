@@ -94,7 +94,7 @@ Designed and built as part of the **Edge Computing** module at the **University 
                              │
                              ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│                     BROWSER DASHBOARDS                          │       │
+│                     BROWSER DASHBOARDS                          │       
 │   ❄️  ac_dashboard.html — Smart AC Control Dashboard            │
 └─────────────────────────────────────────────────────────────────┘
 ```
