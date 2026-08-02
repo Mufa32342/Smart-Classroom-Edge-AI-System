@@ -94,8 +94,7 @@ Designed and built as part of the **Edge Computing** module at the **University 
                              │
                              ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│                     BROWSER DASHBOARDS                          │
-│   🖥️  index.html       — Video/Image Detection Dashboard        │
+│                     BROWSER DASHBOARDS                          │       │
 │   ❄️  ac_dashboard.html — Smart AC Control Dashboard            │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -138,8 +137,8 @@ Before you begin, ensure you have the following:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/Mufa32342/classroom-detector.git
-cd classroom-detector
+git clone https://github.com/Mufa32342/Smart-Classroom-Edge-AI-System.git
+cd Smart-Classroom-Edge-AI-System
 ```
 
 ### 2. Install Backend Dependencies
@@ -191,13 +190,11 @@ Open either dashboard directly in your browser:
 
 | Dashboard | File | Purpose |
 |---|---|---|
-| 🖼️ Detection Dashboard | `dashboard/index.html` | Upload images/video for detection |
 | ❄️ AC Control Dashboard | `dashboard/ac_dashboard.html` | Live occupancy & AC status |
 
 ```bash
 # Simply open the file in your browser (Windows)
 start dashboard\ac_dashboard.html
-start dashboard\index.html
 ```
 
 > 📡 Ensure the FastAPI server is running on port **8000** before opening the dashboards.
@@ -273,22 +270,13 @@ model.train(
 The primary dashboard for smart classroom monitoring:
 
 1. Open `dashboard/ac_dashboard.html` in your browser
-2. Allow **camera access** when prompted
+2.**Video Detection:** Click "Upload Video" → select a video file → process and view annotated output
 3. The dashboard will:
    - Capture live webcam frames every second
    - Send frames to `POST /detect/frame`
    - Display detected persons, occupancy level, and current AC state
    - Show real-time bounding boxes over detected individuals
 4. AC state and temperature update automatically based on occupancy
-
-### 🖼️ Detection Dashboard (`index.html`)
-
-For static image or video analysis:
-
-1. Open `dashboard/index.html` in your browser
-2. **Image Detection:** Click "Upload Image" → select a photo → view detection results
-3. **Video Detection:** Click "Upload Video" → select a video file → process and view annotated output
-4. Results display bounding boxes, class labels, confidence scores, and occupancy summary
 
 ---
 
@@ -367,8 +355,8 @@ classroom-detector/
 │       └── best.onnx                 # Exported ONNX model (edge-optimized)
 │
 └── 🌐 dashboard/
-    ├── ac_dashboard.html             # Smart Classroom AC Control Dashboard
-    └── index.html                    # Video / Image Detection Dashboard
+    └── ac_dashboard.html             # Smart Classroom AC Control Dashboard
+    
 ```
 
 ---
