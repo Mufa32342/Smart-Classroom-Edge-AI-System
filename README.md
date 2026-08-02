@@ -270,7 +270,7 @@ model.train(
 The primary dashboard for smart classroom monitoring:
 
 1. Open `dashboard/ac_dashboard.html` in your browser
-2.**Video Detection:** Click "Upload Video" → select a video file → process and view annotated output
+2. **Video Detection:** Click "Upload Video" → select a video file     
 3. The dashboard will:
    - Capture live webcam frames every second
    - Send frames to `POST /detect/frame`
